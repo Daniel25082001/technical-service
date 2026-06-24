@@ -1,46 +1,32 @@
-import { Client } from './client.entity';
+import Client from "./client.model";
 
 export class ClientRepository {
-  private clients: Client[] = [];
-
-  public findAll(): Client[] {
-    return this.clients;
+  async create(data: any) {
+    return await Client.create(data);
   }
 
-  public findById(id: string): Client | undefined {
-    return this.clients.find(client => client.id === id);
+  async findAll() {
+    return await Client.find();
   }
 
-  public save(client: Client): Client {
-    this.clients.push(client);
-    return client;
+  async findById(id: string) {
+    return await Client.findById(id);
   }
 
-  public update(id: string, data: Client): Client | undefined {
-    const index = this.clients.findIndex(
-      client => client.id === id
+  async update(
+    id: string,
+    data: any
+  ) {
+    return await Client.findByIdAndUpdate(
+      id,
+      data,
+      {
+        new: true,
+      }
     );
-
-    if (index === -1) {
-      return undefined;
-    }
-
-    this.clients[index] = data;
-
-    return this.clients[index];
   }
 
-  public delete(id: string): boolean {
-    const index = this.clients.findIndex(
-      client => client.id === id
-    );
-
-    if (index === -1) {
-      return false;
-    }
-
-    this.clients.splice(index, 1);
-
-    return true;
+  async delete(id: string) {
+    return await Client.findByIdAndDelete(id);
   }
 }

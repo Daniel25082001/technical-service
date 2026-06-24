@@ -1,13 +1,33 @@
-import { Router } from 'express';
-import { ClientController } from './client.controller';
+import { Router } from "express";
+import { ClientController } from "./client.controller";
 
 const router = Router();
-const controller = new ClientController();
+const controller =
+  new ClientController();
 
-router.get('/', controller.getAll);
-router.get('/:id', controller.getById);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.delete);
+router.post(
+  "/",
+  controller.create
+);
+
+router.get(
+  "/",
+  controller.findAll
+);
+
+router.get(
+  "/:id",
+  controller.findById
+);
+
+router.put(
+  "/:id",
+  controller.update
+);
+
+router.delete(
+  "/:id",
+  controller.delete
+);
 
 export default router;

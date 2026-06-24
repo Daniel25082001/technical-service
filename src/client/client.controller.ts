@@ -1,88 +1,90 @@
-import { Request, Response } from 'express';
-import { ClientService } from './client.service';
+import { Request, Response } from "express";
+import { ClientService } from "./client.service";
+
+const service = new ClientService();
 
 export class ClientController {
-  private service = new ClientService();
-
-  public getAll = (
+  async create(
     req: Request,
     res: Response
-  ) => {
-    const clients = this.service.getAll();
+  ) {
+    try {
+      const client = await service.create(
+        req.body
+      );
 
-    res.json(clients);
-  };
+      return res.status(201).json(client);
+    } catch {
+      return res.status(500).json({
+        message: "Error creating client",
+      });
+    }
+  }
 
-  public getById = (
+  async findAll(
     req: Request,
     res: Response
-  ) => {
-    const client = this.service.getById(
-      req.params.id as string
-    );
+  ) {
+    const clients =
+      await service.findAll();
+
+    return res.json(clients);
+  }
+
+  async findById(
+    req: Request,
+    res: Response
+  ) {
+    const client =
+      await service.findById(
+        req.params.id as string
+      );
 
     if (!client) {
       return res.status(404).json({
-        message: 'Cliente no encontrado'
+        message: "Client not found",
       });
     }
 
-    res.json(client);
-  };
+    return res.json(client);
+  }
 
-  public create = (
+  async update(
     req: Request,
     res: Response
-  ) => {
-    const { name, phone, address } = req.body;
-
-    const client = this.service.create(
-      name,
-      phone,
-      address
-    );
-
-    res.status(201).json(client);
-  };
-
-  public update = (
-    req: Request,
-    res: Response
-  ) => {
-    const { name, phone, address } = req.body;
-
-    const client = this.service.update(
-      req.params.id as string,
-      name,
-      phone,
-      address
-    );
+  ) {
+    const client =
+      await service.update(
+        req.params.id as string,
+        req.body
+      );
 
     if (!client) {
       return res.status(404).json({
-        message: 'Cliente no encontrado'
+        message: "Client not found",
       });
     }
 
-    res.json(client);
-  };
+    return res.json(client);
+  }
 
-  public delete = (
+  async delete(
     req: Request,
     res: Response
-  ) => {
-    const deleted = this.service.delete(
-      req.params.id as string
-    );
+  ) {
+    const client =
+      await service.delete(
+        req.params.id as string
+      );
 
-    if (!deleted) {
+    if (!client) {
       return res.status(404).json({
-        message: 'Cliente no encontrado'
+        message: "Client not found",
       });
     }
 
-    res.json({
-      message: 'Cliente eliminado'
-    });
-  };
+    return res
+      .status(204)
+      .send();
+  }
 }

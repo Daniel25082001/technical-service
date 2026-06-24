@@ -1,4 +1,14 @@
-import { App } from './app';
+import app from "./app";
+import { connectDB } from "./db/mongo";
 
-const application = new App();
-application.start();
+const PORT = 3000;
+
+const start = async () => {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();

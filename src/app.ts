@@ -1,27 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import clientRoutes from './client/client.routes';
+import express from "express";
+import clientRoutes from "./client/client.routes";
 
-export class App {
-  private app = express();
+const app = express();
 
-  constructor() {
-    this.middlewares();
-    this.routes();
-  }
+app.use(express.json());
 
-  private middlewares() {
-    this.app.use(cors());
-    this.app.use(express.json());
-  }
+app.use("/clients", clientRoutes);
 
-  private routes() {
-    this.app.use('/clients', clientRoutes);
-  }
-
-  public start() {
-    this.app.listen(3000, () => {
-      console.log('Servidor iniciado en puerto 3000');
-    });
-  }
-}
+export default app;
