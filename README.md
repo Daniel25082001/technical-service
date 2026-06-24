@@ -1,4 +1,4 @@
-# 🛠 Technical Service API
+##  Technical Service API
 
 Backend system for managing **clients** and **repair work orders**.
 
@@ -9,9 +9,7 @@ Built with:
 - MongoDB (Docker)
 - Mongoose
 
----
-
-## 📌 Project Description
+##  Project Description
 
 This system allows:
 
@@ -20,9 +18,7 @@ This system allows:
 - Tracking repair status
 - Database persistence using MongoDB
 
----
-
-## ⚙️ Requirements
+##  Requirements
 
 Before running the project, make sure you have installed:
 
@@ -30,9 +26,7 @@ Before running the project, make sure you have installed:
 - Docker Desktop
 - Git
 
----
-
-## 🐳 Run MongoDB (Docker)
+##  Run MongoDB (Docker)
 
 Start MongoDB container:
 
@@ -50,15 +44,11 @@ MongoDB will be available at:
 
 mongodb://localhost:27017
 
----
-
-## 📦 Install dependencies
+##  Install dependencies
 
 npm install
 
----
-
-## 🚀 Run the project
+##  Run the project
 
 Development mode:
 
@@ -68,25 +58,7 @@ Server runs on:
 
 http://localhost:3000
 
----
-
-## 📁 Project structure
-
-src/
-├── client/
-│   ├── client.model.ts
-│   ├── client.repository.ts
-│   ├── client.service.ts
-│   ├── client.controller.ts
-│   └── client.routes.ts
-├── db/
-│   └── mongo.ts
-├── app.ts
-└── init.ts
-
----
-
-# 👤 CLIENT MODULE (CRUD)
+#  CLIENT MODULE (CRUD)
 
 Base URL:
 
@@ -104,19 +76,13 @@ POST /clients
   "address": "Street 123"
 }
 
----
-
 ## 📄 Get all clients
 
 GET /clients
 
----
-
 ## 🔍 Get client by ID
 
 GET /clients/:id
-
----
 
 ## ✏️ Update client
 
@@ -126,24 +92,18 @@ PUT /clients/:id
   "phone": "111222333"
 }
 
----
-
 ## ❌ Delete client
 
 DELETE /clients/:id
 
----
-
-## 🧠 Business Rules
+##  Business Rules
 
 - Phone must be unique
 - Required fields: name, phone, address
 - API returns 404 if client not found
 - Uses proper HTTP status codes
 
----
-
-## 🛠 Tech Stack
+##  Tech Stack
 
 - Node.js
 - Express
@@ -151,9 +111,3 @@ DELETE /clients/:id
 - MongoDB
 - Mongoose
 - Docker
-
----
-
-## 👨‍💻 Author
-
-Academic backend project for learning purposes.
