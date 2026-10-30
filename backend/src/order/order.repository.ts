@@ -6,11 +6,11 @@ export class OrderRepository {
   }
 
   async findAll(): Promise<any> {
-    return await Order.find().populate("customerId");
+    return await Order.find();
   }
 
   async findById(id: any): Promise<any> {
-    return await Order.findById(id).populate("customerId");
+    return await Order.findById(id);
   }
 
   async update(id: any, data: any): Promise<any> {
@@ -22,7 +22,7 @@ export class OrderRepository {
   }
 
   async findByOrderAndPhone(orderId: any): Promise<any> {
-    return await Order.findById(orderId).populate("customerId");
+    return await Order.findById(orderId);
   }
 
   async countByCustomerAndStatuses(customerId: any, statuses: any[]): Promise<number> {

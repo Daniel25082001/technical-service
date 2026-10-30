@@ -14,7 +14,18 @@ export class ClientController {
       );
 
       return res.status(201).json(client);
-    } catch {
+    } catch (error: any) {
+      if (
+        error.name === "ValidationError" ||
+        error.code === 11000
+      ) {
+        return res.status(400).json({
+          message:
+            error.message ||
+            "Datos inválidos para crear el cliente.",
+        });
+      }
+
       return res.status(500).json({
         message: "Error creating client",
       });
@@ -53,19 +64,36 @@ export class ClientController {
     req: Request,
     res: Response
   ) {
-    const client =
-      await service.update(
-        req.params.id as string,
-        req.body
-      );
+    try {
+      const client =
+        await service.update(
+          req.params.id as string,
+          req.body
+        );
 
-    if (!client) {
-      return res.status(404).json({
-        message: "Client not found",
+      if (!client) {
+        return res.status(404).json({
+          message: "Client not found",
+        });
+      }
+
+      return res.json(client);
+    } catch (error: any) {
+      if (
+        error.name === "ValidationError" ||
+        error.code === 11000
+      ) {
+        return res.status(400).json({
+          message:
+            error.message ||
+            "Datos inválidos para actualizar el cliente.",
+        });
+      }
+
+      return res.status(500).json({
+        message: "Error updating client",
       });
     }
-
-    return res.json(client);
   }
 
   async delete(

@@ -22,6 +22,7 @@ export class ClientRepository {
       data,
       {
         new: true,
+        runValidators: true,
       }
     );
   }

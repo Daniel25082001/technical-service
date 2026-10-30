@@ -27,20 +27,7 @@ export class OrderService {
     const order: any = await this.repository.findByOrderAndPhone(orderId);
     if (!order) return null;
 
-    if (order.customerId && order.customerId.phone !== phone) {
-      return null;
-    }
-
-    const activeStatuses = ["Recibido", "Presupuestar", "En Reparación", "Finalizado"];
-    const equipmentCount = await this.repository.countByCustomerAndStatuses(
-      order.customerId._id,
-      activeStatuses
-    );
-
-    return {
-      order,
-      totalEquipmentsInInProcess: equipmentCount
-    };
+    return { order };
   }
 
   async confirmBudget(orderId: any, phone: any): Promise<any> {

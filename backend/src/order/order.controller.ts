@@ -7,8 +7,19 @@ export class OrderController {
     try {
       const order = await service.create(req.body);
       res.status(201).json(order);
-    } catch {
-      res.status(500).json({ message: "Error al crear la orden" });
+    } catch (error: any) {
+      console.error("Error al crear la orden:", error);
+      if (error.name === "ValidationError") {
+        return res.status(400).json({ message: error.message, errors: error.errors });
+      }
+      return res.status(500).json({
+        message:
+          error?.message ||
+          (typeof error === "string" ? error : "Error al crear la orden"),
+        details:
+          error?.errors ||
+          (error && typeof error === "object" ? JSON.stringify(error) : undefined),
+      });
     }
   }
 
@@ -54,7 +65,7 @@ export class OrderController {
         res.status(404).json({ message: "Orden no encontrada" });
         return;
       }
-      res.status(204).send();
+      res.json({ message: "Orden eliminada" });
     } catch {
       res.status(500).json({ message: "Error al eliminar la orden" });
     }
@@ -81,10 +92,10 @@ export class OrderController {
     try {
       const updatedOrder = await service.confirmBudget(orderId, phone);
       if (!updatedOrder) {
-        res.status(404).json({ message: "No se pudo procesar la aprobación" });
+        res.status(404).json({ message: "The provided data does not correspond to any active order" });
         return;
       }
-      res.json({ message: "Presupuesto aprobado. El equipo pasó a reparación.", order: updatedOrder });
+      res.json({ message: "Presupuesto aprobado en pesos. El equipo pasó a reparación.", order: updatedOrder });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }

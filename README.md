@@ -1,113 +1,125 @@
-##  Technical Service API
+# Technical Service
 
-Backend system for managing **clients** and **repair work orders**.
+Este proyecto quedó separado en dos partes:
 
-Built with:
-- Node.js
-- Express
-- TypeScript
-- MongoDB (Docker)
-- Mongoose
+- backend: API REST con Node.js, Express y MongoDB
+- frontend: aplicación Angular para gestionar órdenes
 
-##  Project Description
+## Estructura
 
-This system allows:
+```text
+technical-service/
+├── backend/
+│   ├── src/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── docker-compose.yaml
+│   └── node_modules/
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   ├── angular.json
+│   └── node_modules/
+├── README.md
+└── .git/
+```
 
-- Client management (CRUD)
-- Work order registration
-- Tracking repair status
-- Database persistence using MongoDB
+## Backend
 
-##  Requirements
-
-Before running the project, make sure you have installed:
-
+### Requisitos
 - Node.js
 - Docker Desktop
-- Git
+- npm
 
-##  Run MongoDB (Docker)
+### Iniciar MongoDB
 
-Start MongoDB container:
+Desde la carpeta backend:
 
+```bash
+cd backend
 docker compose up -d
+```
 
-Stop MongoDB:
+### Instalar dependencias
 
-docker compose down
-
-Check running containers:
-
-docker ps
-
-MongoDB will be available at:
-
-mongodb://localhost:27017
-
-##  Install dependencies
-
+```bash
+cd backend
 npm install
+```
 
-##  Run the project
+### Levantar API
 
-Development mode:
-
+```bash
+cd backend
 npm run dev
+```
 
-Server runs on:
+La API quedará en:
 
+```text
 http://localhost:3000
+```
 
-#  CLIENT MODULE (CRUD)
+### Endpoints principales
 
-Base URL:
+```text
+GET    /clients
+POST   /clients
+GET    /clients/:id
+PUT    /clients/:id
+DELETE /clients/:id
 
-http://localhost:3000/clients
+GET    /orders
+POST   /orders
+GET    /orders/:id
+PUT    /orders/:id
+DELETE /orders/:id
+```
 
 ---
 
-## ➕ Create client
+## Frontend
 
-POST /clients
-
-{
-  "name": "John Doe",
-  "phone": "123456789",
-  "address": "Street 123"
-}
-
-## 📄 Get all clients
-
-GET /clients
-
-## 🔍 Get client by ID
-
-GET /clients/:id
-
-## ✏️ Update client
-
-PUT /clients/:id
-
-{
-  "phone": "111222333"
-}
-
-## ❌ Delete client
-
-DELETE /clients/:id
-
-##  Business Rules
-
-- Phone must be unique
-- Required fields: name, phone, address
-- API returns 404 if client not found
-- Uses proper HTTP status codes
-
-##  Tech Stack
-
+### Requisitos
 - Node.js
-- Express
-- TypeScript
-- MongoDB
-- Mongoose
-- Docker
+- npm
+
+### Instalar dependencias
+
+```bash
+cd frontend
+npm install
+```
+
+### Levantar app Angular
+
+```bash
+cd frontend
+npm start
+```
+
+La app quedará en:
+
+```text
+http://localhost:4200
+```
+
+> En algunos equipos Windows puede aparecer un bloqueo del sistema sobre el módulo nativo de Rollup. Si eso pasa, hay que autorizar ese archivo o mover el proyecto a una ruta permitida por Windows antes de ejecutar `npm start`.
+
+---
+
+## Flujo recomendado
+
+1. Abrir Docker y levantar MongoDB desde backend
+2. Levantar backend con `npm run dev`
+3. Levantar frontend con `npm start`
+4. Usar la app para crear y gestionar órdenes
+
+## Nota
+
+La app del frontend consume la API desde:
+
+```text
+http://localhost:3000/orders
+```
+
