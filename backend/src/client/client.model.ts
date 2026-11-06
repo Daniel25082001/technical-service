@@ -1,17 +1,47 @@
 import mongoose from "mongoose";
 
-const generateClientId = (): string => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  return Array.from({ length: 8 }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join("");
+export class ClientIdCapacityError extends Error {
+  constructor() {
+    super("Se alcanzó el límite de identificadores de clientes (Z9999).");
+    this.name = "ClientIdCapacityError";
+  }
+}
+
+const counterSchema = new mongoose.Schema(
+  {
+    _id: String,
+    seq: Number,
+  },
+  { versionKey: false }
+);
+
+const ClientCounter =
+  mongoose.models.ClientCounter ||
+  mongoose.model("ClientCounter", counterSchema);
+
+const generateClientId = async (): Promise<string> => {
+  const counter = await ClientCounter.findOneAndUpdate(
+    { _id: "clientId" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  const sequence = counter.seq;
+  const sequencePerLetter = 9999;
+  const letterIndex = Math.floor((sequence - 1) / sequencePerLetter);
+
+  if (letterIndex >= 26) {
+    throw new ClientIdCapacityError();
+  }
+
+  const letter = String.fromCharCode("A".charCodeAt(0) + letterIndex);
+  const number = ((sequence - 1) % sequencePerLetter) + 1;
+  return `${letter}${number.toString().padStart(4, "0")}`;
 };
 
 const clientSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
-      default: generateClientId,
     },
     name: {
       type: String,
@@ -26,7 +56,7 @@ const clientSchema = new mongoose.Schema(
       unique: true,
       validate: {
         validator: (value: string) => /^(\d{4}-\d{6}|\d{10})$/.test(value),
-        message: "El número de teléfono debe tener formato 3462-683521.",
+        message: "El número de teléfono debe tener formato 3462-123456.",
       },
     },
 
@@ -40,6 +70,12 @@ const clientSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+clientSchema.pre("save", async function () {
+  if (this.isNew) {
+    this._id = await generateClientId();
+  }
+});
 
 export default mongoose.model(
   "Client",

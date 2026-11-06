@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientController = void 0;
+const client_model_1 = require("./client.model");
 const client_service_1 = require("./client.service");
 const service = new client_service_1.ClientService();
 class ClientController {
@@ -10,6 +11,11 @@ class ClientController {
             return res.status(201).json(client);
         }
         catch (error) {
+            if (error instanceof client_model_1.ClientIdCapacityError) {
+                return res.status(409).json({
+                    message: error.message,
+                });
+            }
             if (error.name === "ValidationError" ||
                 error.code === 11000) {
                 return res.status(400).json({

@@ -32,7 +32,8 @@ const orderSchema = new mongoose.Schema(
       required: true,
       trim: true,
       validate: {
-        validator: (value: string) => /^[A-Z0-9]{8}$/.test(value),
+        validator: (value: string) =>
+          /^(?:[A-Z]\d{4}|[A-Z0-9]{8})$/.test(value),
         message: "customerId debe ser un identificador de cliente válido.",
       },
     },

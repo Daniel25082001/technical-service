@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ClientIdCapacityError } from "./client.model";
 import { ClientService } from "./client.service";
 
 const service = new ClientService();
@@ -15,6 +16,12 @@ export class ClientController {
 
       return res.status(201).json(client);
     } catch (error: any) {
+      if (error instanceof ClientIdCapacityError) {
+        return res.status(409).json({
+          message: error.message,
+        });
+      }
+
       if (
         error.name === "ValidationError" ||
         error.code === 11000
