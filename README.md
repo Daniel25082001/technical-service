@@ -3,7 +3,7 @@
 Este proyecto quedó separado en dos partes:
 
 - backend: API REST con Node.js, Express y MongoDB
-- frontend: aplicación Angular para gestionar órdenes
+- frontend: portal Angular con Bootstrap para gestionar clientes
 
 ## Estructura
 
@@ -60,6 +60,9 @@ La API quedará en:
 http://localhost:3000
 ```
 
+Los clientes nuevos reciben automáticamente un código secuencial (`A0001` a `A9999`, luego
+`B0001`, y así sucesivamente). Los códigos ya asignados a clientes existentes no se modifican.
+
 ### Endpoints principales
 
 ```text
@@ -113,13 +116,17 @@ http://localhost:4200
 1. Abrir Docker y levantar MongoDB desde backend
 2. Levantar backend con `npm run dev`
 3. Levantar frontend con `npm start`
-4. Usar la app para crear y gestionar órdenes
+4. Usar el portal para clientes en `http://localhost:4200`
 
 ## Nota
 
-La app del frontend consume la API desde:
+El backend expone los recursos desde:
 
 ```text
+http://localhost:3000/clients
 http://localhost:3000/orders
 ```
 
+El formulario de seguimiento del frontend queda deshabilitado temporalmente: el endpoint actual de
+consulta de órdenes no valida el teléfono del cliente. El backend se mantiene sin cambios en este
+inicio del frontend.
