@@ -25,6 +25,7 @@ thead th {
 
 /* Sobrescribe los colores claros locales del encabezado y de las celdas en modo oscuro. */
 :host-context(html[data-bs-theme='dark']) .table {
+  /* Variables de Bootstrap para fondo, texto, bordes y estados de la tabla. */
   --bs-table-bg: #1f2937;
   --bs-table-color: #e5e7eb;
   --bs-table-border-color: #374151;

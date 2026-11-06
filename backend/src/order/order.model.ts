@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 
+export class OrderIdCapacityError extends Error {
+  constructor() {
+    super("Se alcanzó el límite de órdenes de cuatro cifras (9999).");
+    this.name = "OrderIdCapacityError";
+  }
+}
+
 const counterSchema = new mongoose.Schema(
   {
     _id: String,
-    seq: {
-      type: Number,
-      default: -1,
-    },
+    seq: Number,
   },
   {
     versionKey: false,
@@ -23,8 +27,8 @@ const orderSchema = new mongoose.Schema(
       type: String,
       trim: true,
       validate: {
-        validator: (value: string) => /^[0-9]{8}$/.test(value),
-        message: "_id debe tener exactamente 8 dígitos numéricos.",
+        validator: (value: string) => /^\d{4}$/.test(value),
+        message: "_id debe tener exactamente 4 dígitos numéricos.",
       },
     },
     customerId: {
@@ -81,18 +85,18 @@ const orderSchema = new mongoose.Schema(
 orderSchema.pre("validate", async function () {
   const order = this as any;
 
-  if (order.isNew && !order._id) {
+  if (order.isNew) {
     const counter = await Counter.findOneAndUpdate(
       { _id: "orderId" },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
 
-    const generated = counter.seq
-      .toString()
-      .padStart(8, "0");
+    if (counter.seq > 9999) {
+      throw new OrderIdCapacityError();
+    }
 
-    order._id = generated;
+    order._id = counter.seq.toString().padStart(4, "0");
   }
 });
 

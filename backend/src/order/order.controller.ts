@@ -1,3 +1,4 @@
+import { OrderIdCapacityError } from "./order.model";
 import { OrderService } from "./order.service";
 
 const service = new OrderService();
@@ -9,6 +10,10 @@ export class OrderController {
       res.status(201).json(order);
     } catch (error: any) {
       console.error("Error al crear la orden:", error);
+      if (error instanceof OrderIdCapacityError) {
+        res.status(409).json({ message: error.message });
+        return;
+      }
       if (error.name === "ValidationError") {
         return res.status(400).json({ message: error.message, errors: error.errors });
       }

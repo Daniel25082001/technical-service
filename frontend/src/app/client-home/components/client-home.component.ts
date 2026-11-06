@@ -60,6 +60,7 @@ export class ClientHomeComponent implements OnInit {
       });
     });
   });
+  // Indicadores que controlan mensajes, botones y spinners de la pantalla.
   protected readonly loading = signal(true);
   protected readonly loadFailed = signal(false);
   protected readonly saving = signal(false);
@@ -70,10 +71,12 @@ export class ClientHomeComponent implements OnInit {
 
   // Formulario tipado y validado antes de enviar datos a la API.
   protected readonly clientForm: ClientFormGroup = new FormGroup({
+    // Nombre obligatorio, no vacío y limitado a 100 caracteres.
     name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/\S/), Validators.maxLength(100)],
     }),
+    // Teléfono con 4 dígitos de área, guion y 6 dígitos de número.
     phone: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -81,6 +84,7 @@ export class ClientHomeComponent implements OnInit {
         Validators.pattern(/^\d{4}-\d{6}$/),
       ],
     }),
+    // Partes de la dirección: localidad, calle y altura son obligatorias; piso es opcional.
     locality: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/\S/), Validators.maxLength(80)],
@@ -105,6 +109,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected loadClients(): void {
+    // Prepara los estados de carga antes de iniciar la petición.
     this.loading.set(true);
     this.loadFailed.set(false);
     this.errorMessage.set('');
@@ -143,6 +148,7 @@ export class ClientHomeComponent implements OnInit {
       }),
     };
     const editingId = this.editingId();
+    // Deshabilita envíos repetidos y limpia mensajes de una operación anterior.
     this.saving.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
@@ -219,13 +225,16 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected setSearchTerm(value: string): void {
+    // Actualiza el término que usa filteredClients para recalcular los resultados.
     this.searchTerm.set(value);
   }
 
   protected clearSearch(): void {
+    // Un término vacío hace que el filtro devuelva todos los clientes.
     this.searchTerm.set('');
   }
 
+  // Convierte las partes de la dirección guardada en una sola línea para la tabla.
   protected readonly formatAddressForDisplay = (value: string): string => {
     const address = this.parseAddress(value);
     const street = [address.street, address.number].filter(Boolean).join(' ');
@@ -250,6 +259,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   private parseAddress(value: string): ClientAddressFields {
+    // Las direcciones nuevas tienen un prefijo y un JSON que se puede separar con seguridad.
     if (value.startsWith(ADDRESS_PREFIX)) {
       try {
         const parsed: unknown = JSON.parse(value.slice(ADDRESS_PREFIX.length));

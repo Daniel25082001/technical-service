@@ -1,0 +1,17 @@
+/* Redondea la tarjeta para que coincida visualmente con los formularios de clientes. */
+.card {
+  border-radius: 1rem;
+}
+
+/* Igualan la altura de los controles y usan bordes suaves. */
+.form-control,
+.form-select {
+  border-color: #dce3ec;
+  min-height: 2.75rem;
+}
+
+/* Resalta el campo activo al escribir o navegar con el teclado. */
+.form-control:focus,
+.form-select:focus {
+  border-color: #86b7fe;
+}

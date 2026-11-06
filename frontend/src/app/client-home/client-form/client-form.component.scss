@@ -1,12 +1,15 @@
+/* Redondea la tarjeta del formulario. */
 .card {
   border-radius: 1rem;
 }
 
+/* Mantiene los campos cómodos de usar y con un borde suave. */
 .form-control {
   border-color: #dce3ec;
   min-height: 2.75rem;
 }
 
+/* Resalta el campo activo al recibir foco del teclado o mouse. */
 .form-control:focus {
   border-color: #86b7fe;
 }

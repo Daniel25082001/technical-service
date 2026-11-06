@@ -1,0 +1,53 @@
+<section class="container py-4 py-lg-5">
+  <!-- Título y conteo de resultados de la administración. -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+    <div>
+      <span class="eyebrow text-primary fw-semibold">ADMINISTRACIÓN</span>
+      <h1 class="h2 fw-bold mt-2 mb-1">Órdenes</h1>
+      <p class="text-secondary mb-0">Registrá y administrá los servicios técnicos.</p>
+    </div>
+    <span class="order-count badge rounded-pill text-bg-light border">
+      Mostrando {{ filteredOrders().length }} de {{ orders().length }} órdenes
+    </span>
+  </div>
+
+  <!-- Mensajes de resultado de las operaciones CRUD. -->
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+  @if (successMessage()) {
+    <div class="alert alert-success" role="status">{{ successMessage() }}</div>
+  }
+
+  <!-- El padre conserva el estado y delega la presentación en formulario y listado. -->
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-5 col-xl-4">
+      <!-- El formulario emite guardar/cancelar; la página decide cómo persistir. -->
+      <app-order-form
+        [form]="orderForm"
+        [clients]="clients()"
+        [editing]="!!editingId()"
+        [saving]="saving()"
+        (save)="saveOrder()"
+        (cancel)="resetForm()"
+      />
+    </div>
+    <div class="col-lg-7 col-xl-8">
+      <!-- El listado emite acciones y cambios de búsqueda hacia el padre. -->
+      <app-order-list
+        [orders]="orders()"
+        [filteredOrders]="filteredOrders()"
+        [clientsById]="clientsById()"
+        [searchTerm]="searchTerm()"
+        [loading]="loading()"
+        [loadFailed]="loadFailed()"
+        [deletingId]="deletingId()"
+        (refresh)="loadData()"
+        (search)="setSearchTerm($event)"
+        (clearSearch)="clearSearch()"
+        (edit)="editOrder($event)"
+        (delete)="deleteOrder($event)"
+      />
+    </div>
+  </div>
+</section>

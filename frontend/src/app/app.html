@@ -10,12 +10,48 @@
         Clientes
       </a>
       <a
-        class="btn btn-outline-primary"
-        routerLink="/seguimiento"
-        routerLinkActive="active"
+        class="nav-link"
+        routerLink="/ordenes"
+        routerLinkActive="text-primary"
+        aria-label="Administrar órdenes"
       >
-        Seguir reparación
+        Órdenes
       </a>
+      <button
+        class="btn btn-outline-secondary theme-toggle"
+        type="button"
+        (click)="toggleTheme()"
+        [attr.aria-label]="isDarkMode() ? 'Activar modo claro' : 'Activar modo oscuro'"
+        [attr.title]="isDarkMode() ? 'Activar modo claro' : 'Activar modo oscuro'"
+      >
+        @if (isDarkMode()) {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 4.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7M8 0a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 0m0 14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 14m8-6a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5M2 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 2 8m11.657-5.657a.5.5 0 0 1 0 .707l-.707.707a.5.5 0 0 1-.707-.707l.707-.707a.5.5 0 0 1 .707 0m-9.9 9.9a.5.5 0 0 1 0 .707l-.707.707a.5.5 0 0 1-.707-.707l.707-.707a.5.5 0 0 1 .707 0m9.9 1.414a.5.5 0 0 1-.707 0l-.707-.707a.5.5 0 0 1 .707-.707l.707.707a.5.5 0 0 1 0 .707m-9.9-9.9a.5.5 0 0 1-.707 0l-.707-.707a.5.5 0 0 1 .707-.707l.707.707a.5.5 0 0 1 0 .707"
+            />
+          </svg>
+        } @else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path
+              d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.28 7.32 7.28.597 0 1.175-.071 1.724-.204a.77.77 0 0 1 .83.315.73.73 0 0 1-.034.861A8.4 8.4 0 0 1 8.344 16C3.734 16 0 12.286 0 7.708 0 4.266 2.11 1.317 5.13.062A.77.77 0 0 1 6 .278"
+            />
+          </svg>
+        }
+      </button>
     </div>
   </nav>
 </header>

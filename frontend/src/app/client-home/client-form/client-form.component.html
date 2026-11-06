@@ -1,5 +1,6 @@
 <section class="card border-0 shadow-sm">
   <div class="card-body p-4">
+    <!-- El título y la etiqueta cambian según si se crea o se modifica un cliente. -->
     <div class="d-flex justify-content-between align-items-start mb-4">
       <div>
         <h2 class="h5 fw-bold mb-1">{{ editing() ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
@@ -12,7 +13,9 @@
       }
     </div>
 
+    <!-- Reactive Forms enlaza cada campo con el FormGroup que entrega el componente padre. -->
     <form [formGroup]="form()" (ngSubmit)="save.emit()" novalidate>
+      <!-- Datos personales: el error se muestra cuando el control ya fue tocado. -->
       <div class="mb-3">
         <label class="form-label fw-medium" for="client-name">Nombre y apellido</label>
         <input
@@ -30,6 +33,7 @@
         }
       </div>
 
+      <!-- El evento input aplica el formato de teléfono sin esperar al envío. -->
       <div class="mb-3">
         <label class="form-label fw-medium" for="client-phone">Teléfono</label>
         <input
@@ -51,6 +55,7 @@
         }
       </div>
 
+      <!-- Dirección separada en campos para que sea más fácil cargar y editar. -->
       <div class="mb-3">
         <label class="form-label fw-medium" for="client-locality">Localidad</label>
         <input
@@ -85,6 +90,7 @@
         }
       </div>
 
+      <!-- La altura es obligatoria y el piso es opcional. -->
       <div class="row g-3 mb-4">
         <div class="col-sm-6">
           <label class="form-label fw-medium" for="client-number">Número / altura</label>
@@ -116,6 +122,7 @@
         </div>
       </div>
 
+      <!-- Durante el guardado se muestra un indicador; cancelar solo aparece al editar. -->
       <div class="d-flex gap-2">
         <button class="btn btn-primary flex-grow-1" type="submit" [disabled]="saving()">
           @if (saving()) {

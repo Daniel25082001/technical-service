@@ -1,0 +1,57 @@
+/* Estilos de tarjeta y buscador del listado. */
+.card {
+  border-radius: 1rem;
+}
+
+.order-search .input-group-text {
+  border-color: #dce3ec;
+  color: #65758b;
+}
+
+.order-search .form-control {
+  min-width: 0;
+}
+
+thead th {
+  background: #f8f9fb;
+  color: #65758b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+:host-context(html[data-bs-theme='dark']) .table {
+  --bs-table-bg: #1f2937;
+  --bs-table-color: #e5e7eb;
+  --bs-table-border-color: #374151;
+}
+
+:host-context(html[data-bs-theme='dark']) thead th {
+  background: #273449;
+  color: #d1d5db;
+}
+
+tbody td {
+  min-width: 7rem;
+}
+
+tbody td:last-child {
+  min-width: 10rem;
+}
+
+.empty-state {
+  padding-bottom: 4rem !important;
+  padding-top: 4rem !important;
+}
+
+.empty-icon {
+  align-items: center;
+  background: #e8f1ff;
+  border-radius: 50%;
+  color: #0d6efd;
+  display: flex;
+  font-size: 1.5rem;
+  height: 3rem;
+  justify-content: center;
+  width: 3rem;
+}

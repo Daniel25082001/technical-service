@@ -1,0 +1,139 @@
+<section class="card border-0 shadow-sm">
+  <div class="card-body p-0">
+    <!-- Encabezado y acción para volver a pedir las órdenes al backend. -->
+    <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
+      <div>
+        <h2 class="h5 fw-bold mb-1">Listado de órdenes</h2>
+        <p class="small text-secondary mb-0">Servicios registrados en el sistema.</p>
+      </div>
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        type="button"
+        (click)="refresh.emit()"
+        [disabled]="loading()"
+        aria-label="Actualizar órdenes"
+      >
+        Actualizar
+      </button>
+    </div>
+
+    <!-- La búsqueda filtra el listado por orden, cliente, equipo, estado y falla. -->
+    @if (!loading() && !loadFailed() && orders().length > 0) {
+      <div class="order-search p-3 border-bottom">
+        <label class="visually-hidden" for="order-search">Buscar órdenes</label>
+        <div class="input-group">
+          <span class="input-group-text bg-white" aria-hidden="true">&#128269;</span>
+          <input
+            class="form-control"
+            id="order-search"
+            type="search"
+            [value]="searchTerm()"
+            (input)="updateSearchTerm($event)"
+            placeholder="Buscar por orden, cliente, equipo, estado o falla"
+            autocomplete="off"
+          />
+          @if (searchTerm()) {
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="clearSearch.emit()"
+              aria-label="Limpiar búsqueda"
+            >
+              Limpiar
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Estados del listado: cargando, error, vacío, sin coincidencias o tabla. -->
+    @if (loading()) {
+      <div class="p-5 text-center text-secondary" role="status">
+        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+        Cargando órdenes...
+      </div>
+    } @else if (loadFailed()) {
+      <div class="p-5 text-center text-secondary">
+        No se pudo cargar el listado. Corregí el problema y volvé a actualizar.
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="empty-state p-5 text-center">
+        <div class="empty-icon mx-auto mb-3" aria-hidden="true">+</div>
+        <h3 class="h6 fw-bold">Todavía no hay órdenes</h3>
+        <p class="text-secondary small mb-0">Usá el formulario para registrar la primera.</p>
+      </div>
+    } @else if (filteredOrders().length === 0) {
+      <div class="empty-state p-5 text-center">
+        <h3 class="h6 fw-bold">No encontramos coincidencias</h3>
+        <button class="btn btn-sm btn-outline-primary" type="button" (click)="clearSearch.emit()">
+          Limpiar búsqueda
+        </button>
+      </div>
+    } @else {
+      <!-- Se muestra información operativa, sin incluir la clave o patrón del equipo. -->
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Orden</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Equipo</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Presupuesto</th>
+              <th scope="col" class="text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of filteredOrders(); track order._id) {
+              <tr>
+                <td class="fw-semibold">{{ order._id }}</td>
+                <td>
+                  <div>{{ clientName(order.customerId) }}</div>
+                  <div class="small text-secondary">{{ order.customerId }}</div>
+                </td>
+                <td>
+                  <div class="fw-semibold">{{ order.brandModel }}</div>
+                  <div class="small text-secondary">{{ order.deviceType }}</div>
+                </td>
+                <td><span class="badge text-bg-primary-subtle text-primary">{{ order.status }}</span></td>
+                <td>
+                  @if (order.budget !== undefined) {
+                    {{ order.budget | currency:'ARS':'symbol':'1.0-2' }}
+                  } @else {
+                    <span class="text-secondary">Sin presupuesto</span>
+                  }
+                </td>
+                <td>
+                  <div class="d-flex justify-content-end gap-2">
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      type="button"
+                      (click)="edit.emit(order)"
+                      [disabled]="!!deletingId()"
+                      [attr.aria-label]="'Editar orden ' + order._id"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      type="button"
+                      (click)="delete.emit(order)"
+                      [disabled]="!!deletingId()"
+                      [attr.aria-label]="'Eliminar orden ' + order._id"
+                    >
+                      @if (deletingId() === order._id) {
+                        <span class="spinner-border spinner-border-sm" aria-label="Eliminando"></span>
+                      } @else {
+                        Eliminar
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

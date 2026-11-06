@@ -1,0 +1,179 @@
+<section class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <!-- El título cambia entre la creación y la edición de una orden. -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h2 class="h5 fw-bold mb-1">{{ editing() ? 'Editar orden' : 'Nueva orden' }}</h2>
+        <p class="small text-secondary mb-0">
+          {{ editing() ? 'Actualizá los datos del servicio.' : 'Completá los datos del equipo.' }}
+        </p>
+      </div>
+      @if (editing()) {
+        <span class="badge text-bg-primary-subtle text-primary">Edición</span>
+      }
+    </div>
+
+    <!-- Reactive Forms enlaza los campos al formulario tipado del componente padre. -->
+    <form [formGroup]="form()" (ngSubmit)="save.emit()" novalidate>
+      <!-- La orden se relaciona con un cliente existente seleccionado por su código. -->
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="order-customer">Cliente</label>
+        <select
+          class="form-select"
+          [class.is-invalid]="form().controls.customerId.invalid && form().controls.customerId.touched"
+          id="order-customer"
+          formControlName="customerId"
+        >
+          <option value="">Seleccioná un cliente</option>
+          @for (client of clients(); track client._id) {
+            <option [value]="client._id">{{ client.name }} ({{ client._id }})</option>
+          }
+        </select>
+        @if (form().controls.customerId.invalid && form().controls.customerId.touched) {
+          <div class="invalid-feedback">Seleccioná el cliente de esta orden.</div>
+        }
+        @if (clients().length === 0) {
+          <div class="form-text">Primero necesitás registrar un cliente.</div>
+        }
+      </div>
+
+      <!-- Información de identificación del equipo recibido. -->
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="order-device-type">Tipo de equipo</label>
+          <input
+            class="form-control"
+            [class.is-invalid]="form().controls.deviceType.invalid && form().controls.deviceType.touched"
+            id="order-device-type"
+            type="text"
+            formControlName="deviceType"
+            placeholder="Ej.: Celular"
+          />
+          @if (form().controls.deviceType.invalid && form().controls.deviceType.touched) {
+            <div class="invalid-feedback">Ingresá el tipo de equipo.</div>
+          }
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="order-brand-model">Marca y modelo</label>
+          <input
+            class="form-control"
+            [class.is-invalid]="form().controls.brandModel.invalid && form().controls.brandModel.touched"
+            id="order-brand-model"
+            type="text"
+            formControlName="brandModel"
+            placeholder="Ej.: Samsung A54"
+          />
+          @if (form().controls.brandModel.invalid && form().controls.brandModel.touched) {
+            <div class="invalid-feedback">Ingresá la marca y el modelo.</div>
+          }
+        </div>
+      </div>
+
+      <!-- Datos usados por el técnico durante el diagnóstico. -->
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="order-serial">Número de serie</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="form().controls.serialNumber.invalid && form().controls.serialNumber.touched"
+          id="order-serial"
+          type="text"
+          formControlName="serialNumber"
+          placeholder="Número de serie o IMEI"
+        />
+        @if (form().controls.serialNumber.invalid && form().controls.serialNumber.touched) {
+          <div class="invalid-feedback">Ingresá el número de serie o IMEI.</div>
+        }
+      </div>
+
+      <!-- La clave/patrón se solicita para el servicio, pero no se muestra en el listado. -->
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="order-access">Clave o patrón</label>
+        <input
+          class="form-control"
+          id="order-access"
+          type="text"
+          formControlName="passwordOrPattern"
+          autocomplete="off"
+        />
+        <div class="form-text">Dato recibido para realizar el diagnóstico del equipo.</div>
+      </div>
+
+      <!-- Falla inicial informada por el cliente. -->
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="order-failure">Falla reportada</label>
+        <textarea
+          class="form-control"
+          [class.is-invalid]="form().controls.reportedFailure.invalid && form().controls.reportedFailure.touched"
+          id="order-failure"
+          rows="3"
+          formControlName="reportedFailure"
+          placeholder="Describí el problema que indicó el cliente"
+        ></textarea>
+        @if (form().controls.reportedFailure.invalid && form().controls.reportedFailure.touched) {
+          <div class="invalid-feedback">Ingresá la falla reportada.</div>
+        }
+      </div>
+
+      <!-- Estado del trabajo y presupuesto opcional. -->
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="order-status">Estado</label>
+          <select class="form-select" id="order-status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="order-budget">Presupuesto</label>
+          <input
+            class="form-control"
+            [class.is-invalid]="form().controls.budget.invalid"
+            id="order-budget"
+            type="number"
+            min="0"
+            step="0.01"
+            formControlName="budget"
+            placeholder="Opcional"
+          />
+          @if (form().controls.budget.invalid) {
+            <div class="invalid-feedback">El presupuesto no puede ser negativo.</div>
+          }
+        </div>
+      </div>
+
+      <!-- Campo interno opcional para observaciones del técnico. -->
+      <div class="mb-4">
+        <label class="form-label fw-medium" for="order-notes">Notas técnicas</label>
+        <textarea
+          class="form-control"
+          id="order-notes"
+          rows="2"
+          formControlName="technicalNotes"
+          placeholder="Observaciones internas (opcional)"
+        ></textarea>
+      </div>
+
+      <!-- Los botones informan al padre y reflejan el estado de guardado. -->
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-primary flex-grow-1"
+          type="submit"
+          [disabled]="saving() || clients().length === 0"
+        >
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Guardando...
+          } @else {
+            {{ editing() ? 'Guardar cambios' : 'Guardar orden' }}
+          }
+        </button>
+        @if (editing()) {
+          <button class="btn btn-outline-secondary" type="button" (click)="cancel.emit()">
+            Cancelar
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+</section>

@@ -1,132 +1,145 @@
-# Technical Service
+# Servicio técnico
 
-Este proyecto quedó separado en dos partes:
+Aplicación para administrar los clientes y las órdenes de un servicio técnico. El proyecto está
+dividido en una API REST y una interfaz web:
 
-- backend: API REST con Node.js, Express y MongoDB
-- frontend: portal Angular con Bootstrap para gestionar clientes
+- **Frontend:** Angular y Bootstrap.
+- **Backend:** Node.js, Express, TypeScript y Mongoose.
+- **Base de datos:** MongoDB.
 
-## Estructura
+## Funcionalidades
 
-```text
-technical-service/
-├── backend/
-│   ├── src/
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── docker-compose.yaml
-│   └── node_modules/
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   ├── angular.json
-│   └── node_modules/
-├── README.md
-└── .git/
+- Crear, editar, buscar y eliminar clientes.
+- Asignar a cada cliente un código secuencial, por ejemplo `A0001`.
+- Registrar, editar, buscar y eliminar órdenes de servicio.
+- Asignar automáticamente a cada orden un número de cuatro cifras, desde `0001` hasta `9999`.
+- Buscar órdenes por número, cliente, equipo, estado y otros detalles.
+- Cambiar entre tema claro y oscuro.
+
+La interfaz de clientes está en `/` y la administración de órdenes en `/ordenes`. El seguimiento de
+órdenes para clientes no forma parte de la interfaz actual.
+
+## Requisitos
+
+- Node.js y npm.
+- Docker Desktop con Docker Compose, para iniciar MongoDB mediante el archivo incluido.
+
+## Preparar el proyecto
+
+Desde una terminal en la carpeta principal del proyecto, instala las dependencias de cada parte:
+
+```powershell
+cd backend
+npm install
+cd ..\frontend
+npm install
+cd ..
 ```
 
-## Backend
+Inicia MongoDB:
 
-### Requisitos
-- Node.js
-- Docker Desktop
-- npm
-
-### Iniciar MongoDB
-
-Desde la carpeta backend:
-
-```bash
+```powershell
 cd backend
 docker compose up -d
 ```
 
-### Instalar dependencias
+La configuración local conecta con `mongodb://localhost:27017/technical-service`. Docker conserva
+los datos en el volumen `mongodb_data`.
 
-```bash
-cd backend
-npm install
-```
+## Ejecutar la aplicación
 
-### Levantar API
+Abre dos terminales, ambas desde la carpeta principal del proyecto.
 
-```bash
+**Terminal 1 — API:**
+
+```powershell
 cd backend
 npm run dev
 ```
 
-La API quedará en:
+La API estará disponible en `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
+**Terminal 2 — frontend:**
 
-Los clientes nuevos reciben automáticamente un código secuencial (`A0001` a `A9999`, luego
-`B0001`, y así sucesivamente). Los códigos ya asignados a clientes existentes no se modifican.
-
-### Endpoints principales
-
-```text
-GET    /clients
-POST   /clients
-GET    /clients/:id
-PUT    /clients/:id
-DELETE /clients/:id
-
-GET    /orders
-POST   /orders
-GET    /orders/:id
-PUT    /orders/:id
-DELETE /orders/:id
-```
-
----
-
-## Frontend
-
-### Requisitos
-- Node.js
-- npm
-
-### Instalar dependencias
-
-```bash
-cd frontend
-npm install
-```
-
-### Levantar app Angular
-
-```bash
+```powershell
 cd frontend
 npm start
 ```
 
-La app quedará en:
+Abre `http://localhost:4200` en el navegador. El frontend necesita que la API y MongoDB estén
+iniciados.
+
+## Estructura del proyecto
 
 ```text
-http://localhost:4200
+technical-service/
+├── backend/
+│   └── src/
+│       ├── client/       # Modelo, lógica y rutas de clientes
+│       ├── db/           # Conexión con MongoDB
+│       ├── order/        # Modelo, lógica y rutas de órdenes
+│       └── scripts/      # Scripts de mantenimiento y migración
+├── frontend/
+│   └── src/app/
+│       ├── client-home/  # Administración de clientes
+│       ├── orders/       # Administración de órdenes
+│       ├── app.routes.ts # Rutas del frontend
+│       └── *.service.ts  # Comunicación con la API
+└── README.md
 ```
 
-> En algunos equipos Windows puede aparecer un bloqueo del sistema sobre el módulo nativo de Rollup. Si eso pasa, hay que autorizar ese archivo o mover el proyecto a una ruta permitida por Windows antes de ejecutar `npm start`.
+Los formularios y listados se encuentran separados de las páginas que coordinan las operaciones.
+Así, la presentación, las validaciones y la comunicación con el backend quedan organizadas en
+componentes distintos.
 
----
+## API
 
-## Flujo recomendado
+La API expone los siguientes endpoints:
 
-1. Abrir Docker y levantar MongoDB desde backend
-2. Levantar backend con `npm run dev`
-3. Levantar frontend con `npm start`
-4. Usar el portal para clientes en `http://localhost:4200`
+| Método | Ruta | Acción |
+|---|---|---|
+| `GET` | `/clients` | Listar clientes |
+| `POST` | `/clients` | Crear cliente |
+| `GET` | `/clients/:id` | Obtener un cliente |
+| `PUT` | `/clients/:id` | Actualizar cliente |
+| `DELETE` | `/clients/:id` | Eliminar cliente |
+| `GET` | `/orders` | Listar órdenes |
+| `POST` | `/orders` | Crear orden |
+| `GET` | `/orders/:id` | Obtener una orden |
+| `PUT` | `/orders/:id` | Actualizar orden |
+| `DELETE` | `/orders/:id` | Eliminar orden |
 
-## Nota
+## Migrar los números de órdenes existentes
 
-El backend expone los recursos desde:
+Si la base de datos ya contiene órdenes con identificadores de ocho cifras, es necesario migrarlas
+antes de volver a iniciar la API con la versión actual. La migración no se ejecuta automáticamente.
 
-```text
-http://localhost:3000/clients
-http://localhost:3000/orders
+1. Detén la API.
+2. Haz un respaldo de MongoDB antes de continuar.
+3. Desde la carpeta principal, ejecuta:
+
+```powershell
+cd backend
+npm run migrate:order-ids
 ```
 
-El formulario de seguimiento del frontend queda deshabilitado temporalmente: el endpoint actual de
-consulta de órdenes no valida el teléfono del cliente. El backend se mantiene sin cambios en este
-inicio del frontend.
+El script asigna identificadores de cuatro cifras en orden de fecha de creación y conserva la
+colección original con un nombre `orders_backup_*`. Los números cambian, así que guarda cualquier
+referencia a los identificadores anteriores. El máximo admitido es de `9999` órdenes; al alcanzar
+ese número, la API rechazará nuevas órdenes con un mensaje explícito.
+
+## Compilar
+
+Para comprobar el backend:
+
+```powershell
+cd backend
+npm run build
+```
+
+Para compilar el frontend:
+
+```powershell
+cd frontend
+npm run build
+```

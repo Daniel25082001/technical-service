@@ -1,4 +1,5 @@
 <section class="container py-4 py-lg-5">
+  <!-- Título de la pantalla y cantidad de resultados frente al total cargado. -->
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
     <div>
       <span class="eyebrow text-primary fw-semibold">ADMINISTRACIÓN</span>
@@ -10,6 +11,7 @@
     </span>
   </div>
 
+  <!-- Los mensajes de estado se muestran después de guardar, editar o eliminar. -->
   @if (errorMessage()) {
     <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
   }
@@ -17,8 +19,10 @@
     <div class="alert alert-success" role="status">{{ successMessage() }}</div>
   }
 
+  <!-- El formulario y la tabla son componentes separados; el padre les pasa estado y recibe acciones. -->
   <div class="row g-4 align-items-start">
     <div class="col-lg-5 col-xl-4">
+      <!-- El formulario emite save/cancel; la lógica de API vive en este componente padre. -->
       <app-client-form
         [form]="clientForm"
         [editing]="!!editingId()"
@@ -29,6 +33,7 @@
     </div>
 
     <div class="col-lg-7 col-xl-8">
+      <!-- El listado comunica búsqueda y acciones mediante eventos hacia el padre. -->
       <app-client-list
         [clients]="clients()"
         [filteredClients]="filteredClients()"

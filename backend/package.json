@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/init.ts",
     "build": "tsc",
-    "start": "node dist/init.js"
+    "start": "node dist/init.js",
+    "migrate:order-ids": "ts-node src/scripts/migrate-order-ids.ts"
   },
   "keywords": [],
   "author": "",

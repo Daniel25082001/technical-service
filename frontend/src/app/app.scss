@@ -21,3 +21,16 @@ main {
   margin-right: 0.65rem;
   width: 2.5rem;
 }
+
+.theme-toggle {
+  align-items: center;
+  display: inline-flex;
+  height: 2.5rem;
+  justify-content: center;
+  padding: 0;
+  width: 2.5rem;
+}
+
+.theme-toggle svg {
+  flex: 0 0 auto;
+}

@@ -11,3 +11,51 @@ body {
 a {
   text-decoration: none;
 }
+
+html[data-bs-theme='dark'] body {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+html[data-bs-theme='dark'] .bg-white,
+html[data-bs-theme='dark'] .card {
+  background-color: #1f2937 !important;
+  color: #e5e7eb;
+}
+
+html[data-bs-theme='dark'] .border,
+html[data-bs-theme='dark'] .border-bottom,
+html[data-bs-theme='dark'] .border-top {
+  border-color: #374151 !important;
+}
+
+html[data-bs-theme='dark'] .client-count {
+  background-color: #273449 !important;
+  color: #e5e7eb;
+}
+
+html[data-bs-theme='dark'] .client-search .input-group-text,
+html[data-bs-theme='dark'] .form-control,
+html[data-bs-theme='dark'] .form-select {
+  background-color: #111827;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+html[data-bs-theme='dark'] .form-control::placeholder {
+  color: #9ca3af;
+}
+
+html[data-bs-theme='dark'] thead th {
+  background: #273449;
+  color: #d1d5db;
+}
+
+html[data-bs-theme='dark'] tbody td {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+html[data-bs-theme='dark'] .back-link {
+  color: #cbd5e1;
+}
