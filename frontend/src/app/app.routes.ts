@@ -1,13 +1,9 @@
 import { Routes } from '@angular/router';
-
-import { LandingPageComponent } from './landing-page.component';
-import { SectionPageComponent } from './section-page.component';
+import { ClientHomeComponent } from './client-home/client-home.componets/client-home.component';
+import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: SectionPageComponent, data: { page: 'dashboard' } },
-  { path: 'landing', component: LandingPageComponent },
-  { path: 'clientes', component: SectionPageComponent, data: { page: 'clients' } },
-  { path: 'ordenes', component: SectionPageComponent, data: { page: 'orders' } },
-  { path: 'reportes', component: SectionPageComponent, data: { page: 'reports' } }
+  { path: '', component: ClientHomeComponent, title: 'Inicio | Servicio técnico' },
+  { path: 'seguimiento', component: OrderTrackingComponent, title: 'Seguimiento | Servicio técnico' },
+  { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,48 @@
+<section class="container py-4 py-lg-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+    <div>
+      <span class="eyebrow text-primary fw-semibold">ADMINISTRACIÓN</span>
+      <h1 class="h2 fw-bold mt-2 mb-1">Clientes</h1>
+      <p class="text-secondary mb-0">Creá, actualizá y eliminá los datos de tus clientes.</p>
+    </div>
+    <span class="client-count badge rounded-pill text-bg-light border">
+      Mostrando {{ filteredClients().length }} de {{ clients().length }} clientes
+    </span>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+  @if (successMessage()) {
+    <div class="alert alert-success" role="status">{{ successMessage() }}</div>
+  }
+
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-5 col-xl-4">
+      <app-client-form
+        [form]="clientForm"
+        [editing]="!!editingId()"
+        [saving]="saving()"
+        (save)="saveClient()"
+        (cancel)="resetForm()"
+      />
+    </div>
+
+    <div class="col-lg-7 col-xl-8">
+      <app-client-list
+        [clients]="clients()"
+        [filteredClients]="filteredClients()"
+        [searchTerm]="searchTerm()"
+        [loading]="loading()"
+        [loadFailed]="loadFailed()"
+        [deletingId]="deletingId()"
+        [formatAddress]="formatAddressForDisplay"
+        (refresh)="loadClients()"
+        (search)="setSearchTerm($event)"
+        (clearSearch)="clearSearch()"
+        (edit)="editClient($event)"
+        (delete)="deleteClient($event)"
+      />
+    </div>
+  </div>
+</section>

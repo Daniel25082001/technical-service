@@ -1,27 +1,26 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { Client, ClientPayload } from './client.model';
+import { Client, ClientInput } from './client.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientsService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:3000/clients';
 
-  getClients(): Observable<Client[]> {
+  getAll(): Observable<Client[]> {
     return this.http.get<Client[]>(this.apiUrl);
   }
 
-  createClient(payload: ClientPayload): Observable<Client> {
-    return this.http.post<Client>(this.apiUrl, payload);
+  create(client: ClientInput): Observable<Client> {
+    return this.http.post<Client>(this.apiUrl, client);
   }
 
-  updateClient(id: string, payload: Partial<ClientPayload>): Observable<Client> {
-    return this.http.put<Client>(`${this.apiUrl}/${id}`, payload);
+  update(id: string, client: ClientInput): Observable<Client> {
+    return this.http.put<Client>(`${this.apiUrl}/${encodeURIComponent(id)}`, client);
   }
 
-  deleteClient(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${encodeURIComponent(id)}`);
   }
 }

@@ -1,59 +1,39 @@
-# Frontend
+# Portal para clientes
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.19.
+Aplicación Angular con Bootstrap para la parte pública del servicio técnico.
 
-## Development server
-
-To start a local development server, run:
+## Desarrollo
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La aplicación se ejecuta en `http://localhost:4200`. El backend existente se inicia por separado
+desde `../backend`.
 
-## Code scaffolding
+## Estructura inicial
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `src/app/client-home/`: gestión de clientes (listar, crear, editar y eliminar).
+- `src/app/client-home/client-form/`: formulario de alta y edición.
+- `src/app/client-home/client-list/`: buscador, listado y acciones de clientes.
+- `src/app/clients.service.ts`: conexión HTTP con `/clients` en el backend.
+- `src/app/client.model.ts`: tipos de cliente usados por el frontend.
+- `src/app/order-tracking/`: pantalla de seguimiento de órdenes.
+- `src/app/app.html`: navegación y estructura general.
+- `src/app/app.routes.ts`: rutas de la aplicación.
 
-```bash
-ng generate component component-name
-```
+Las plantillas HTML están separadas de los componentes TypeScript.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La gestión de clientes requiere el backend disponible en `http://localhost:3000`.
+El listado permite buscar por cualquier dato del cliente y no distingue mayúsculas ni acentos.
 
-```bash
-ng generate --help
-```
+Localidad, calle, altura y piso se conservan dentro del campo `address` existente mediante un
+formato versionado del frontend, sin requerir cambios en el esquema del backend. Las direcciones
+guardadas anteriormente se cargan como calle para poder completarlas al editarlas.
 
-## Building
+## Integración pendiente
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El backend actual no verifica el teléfono recibido al consultar o aceptar una orden. Por ese motivo,
+el formulario de seguimiento está preparado visualmente pero la consulta permanece deshabilitada
+hasta que la API valide también ese dato.

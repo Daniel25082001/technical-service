@@ -1,14 +1,8 @@
 export interface Client {
-  _id?: string;
+  _id: string;
   name: string;
   phone: string;
   address: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-export interface ClientPayload {
-  name: string;
-  phone: string;
-  address: string;
-}
+export type ClientInput = Pick<Client, 'name' | 'phone' | 'address'>;

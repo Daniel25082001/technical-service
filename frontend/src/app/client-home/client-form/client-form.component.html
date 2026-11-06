@@ -1,0 +1,136 @@
+<section class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h2 class="h5 fw-bold mb-1">{{ editing() ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+        <p class="small text-secondary mb-0">
+          {{ editing() ? 'Actualizá sus datos.' : 'Completá los datos para guardarlo.' }}
+        </p>
+      </div>
+      @if (editing()) {
+        <span class="badge text-bg-primary-subtle text-primary">Edición</span>
+      }
+    </div>
+
+    <form [formGroup]="form()" (ngSubmit)="save.emit()" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="client-name">Nombre y apellido</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="form().controls.name.invalid && form().controls.name.touched"
+          id="client-name"
+          type="text"
+          formControlName="name"
+          autocomplete="name"
+          maxlength="100"
+          placeholder="Ej.: María García"
+        />
+        @if (form().controls.name.invalid && form().controls.name.touched) {
+          <div class="invalid-feedback">Ingresá el nombre del cliente (no puede quedar vacío).</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="client-phone">Teléfono</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="phoneHasError()"
+          id="client-phone"
+          type="tel"
+          formControlName="phone"
+          autocomplete="tel"
+          inputmode="numeric"
+          maxlength="11"
+          (input)="formatPhone($event)"
+          placeholder="3462-123456"
+        />
+        @if (phoneHasError()) {
+          <div class="invalid-feedback">
+            Ingresá 4 dígitos de área y 6 de número, por ejemplo 3462-123456.
+          </div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="client-locality">Localidad</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="form().controls.locality.invalid && form().controls.locality.touched"
+          id="client-locality"
+          type="text"
+          formControlName="locality"
+          autocomplete="address-level2"
+          maxlength="80"
+          placeholder="Ej.: Rosario"
+        />
+        @if (form().controls.locality.invalid && form().controls.locality.touched) {
+          <div class="invalid-feedback">Ingresá la localidad.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-medium" for="client-street">Dirección / calle</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="form().controls.street.invalid && form().controls.street.touched"
+          id="client-street"
+          type="text"
+          formControlName="street"
+          autocomplete="address-line1"
+          maxlength="100"
+          placeholder="Ej.: San Martín"
+        />
+        @if (form().controls.street.invalid && form().controls.street.touched) {
+          <div class="invalid-feedback">Ingresá la calle o dirección.</div>
+        }
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="client-number">Número / altura</label>
+          <input
+            class="form-control"
+            [class.is-invalid]="form().controls.number.invalid && form().controls.number.touched"
+            id="client-number"
+            type="text"
+            formControlName="number"
+            autocomplete="address-line2"
+            maxlength="20"
+            placeholder="Ej.: 1234"
+          />
+          @if (form().controls.number.invalid && form().controls.number.touched) {
+            <div class="invalid-feedback">Ingresá la altura.</div>
+          }
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label fw-medium" for="client-floor">Piso (opcional)</label>
+          <input
+            class="form-control"
+            id="client-floor"
+            type="text"
+            formControlName="floor"
+            autocomplete="address-line2"
+            maxlength="20"
+            placeholder="Ej.: 2° B"
+          />
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary flex-grow-1" type="submit" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Guardando...
+          } @else {
+            {{ editing() ? 'Guardar cambios' : 'Guardar cliente' }}
+          }
+        </button>
+        @if (editing()) {
+          <button class="btn btn-outline-secondary" type="button" (click)="cancel.emit()">
+            Cancelar
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+</section>

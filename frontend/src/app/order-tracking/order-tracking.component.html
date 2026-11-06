@@ -1,0 +1,61 @@
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <a class="back-link d-inline-block mb-4" routerLink="/" aria-label="Volver al inicio">
+        &larr; Volver al inicio
+      </a>
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4 p-md-5">
+          <span class="badge rounded-pill text-bg-primary-subtle text-primary mb-3">
+            Seguimiento de reparación
+          </span>
+          <h1 class="h2 fw-bold mb-2">Consultá tu orden</h1>
+          <p class="text-secondary mb-4">
+            Ingresá el número de orden y el teléfono que registraste al dejar tu equipo.
+          </p>
+
+          <form [formGroup]="trackingForm">
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="orderId">Número de orden</label>
+              <input
+                class="form-control form-control-lg"
+                id="orderId"
+                type="text"
+                inputmode="numeric"
+                maxlength="8"
+                placeholder="Ej.: 00001234"
+                formControlName="orderId"
+                autocomplete="off"
+              />
+              <div class="form-text">Son 8 dígitos, indicados en el comprobante del servicio.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-medium" for="phone">Teléfono registrado</label>
+              <input
+                class="form-control form-control-lg"
+                id="phone"
+                type="tel"
+                placeholder="3462-683521"
+                formControlName="phone"
+                autocomplete="tel"
+              />
+              <div class="form-text">Formato esperado: 3462-683521 o 10 dígitos.</div>
+            </div>
+
+            <div class="alert alert-warning" role="status">
+              <strong>Consulta en preparación.</strong>
+              La API actual no verifica el teléfono al buscar una orden. El seguimiento se
+              habilitará cuando esa validación esté disponible.
+            </div>
+
+            <button class="btn btn-primary btn-lg w-100" type="button" disabled>
+              Consultar estado
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

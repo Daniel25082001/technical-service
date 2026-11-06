@@ -1,0 +1,49 @@
+.card {
+  border-radius: 1rem;
+}
+
+.client-search .input-group-text {
+  border-color: #dce3ec;
+  color: #65758b;
+}
+
+.client-search .form-control {
+  min-width: 0;
+}
+
+thead th {
+  background: #f8f9fb;
+  color: #65758b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody td {
+  min-width: 7rem;
+}
+
+tbody td:first-child {
+  min-width: 9rem;
+}
+
+tbody td:last-child {
+  min-width: 10rem;
+}
+
+.empty-state {
+  padding-bottom: 4rem !important;
+  padding-top: 4rem !important;
+}
+
+.empty-icon {
+  align-items: center;
+  background: #e8f1ff;
+  border-radius: 50%;
+  color: #0d6efd;
+  display: flex;
+  font-size: 1.5rem;
+  height: 3rem;
+  justify-content: center;
+  width: 3rem;
+}

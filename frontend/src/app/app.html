@@ -1,40 +1,32 @@
-<main class="page-shell">
-  <section class="panel">
-    <aside class="sidebar">
-      <div class="brand-wrap">
-        <div class="brand-icon">F</div>
-        <div>
-          <p class="brand-tag">Servicio técnico</p>
-          <h2>FixFlow</h2>
-        </div>
-      </div>
+<header class="bg-white border-bottom">
+  <nav class="container navbar navbar-expand-md py-3" aria-label="Navegación principal">
+    <a class="navbar-brand d-flex align-items-center fw-bold" routerLink="/">
+      <span class="brand-mark" aria-hidden="true">ST</span>
+      Servicio técnico
+    </a>
 
-      <nav class="nav" aria-label="Navegación principal">
-        <a class="nav-item" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-        <a class="nav-item" routerLink="/landing" routerLinkActive="active">Demo</a>
-        <a class="nav-item" routerLink="/clientes" routerLinkActive="active">Clientes</a>
-        <a class="nav-item" routerLink="/ordenes" routerLinkActive="active">Órdenes</a>
-        <a class="nav-item" routerLink="/reportes" routerLinkActive="active">Reportes</a>
-      </nav>
-
-      <div class="sidebar-box">
-        <span>Turno</span>
-        <strong>Activo</strong>
-      </div>
-    </aside>
-
-    <div class="content">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Technical Service</p>
-          <h1>Gestión de reparaciones</h1>
-        </div>
-        <div class="header-actions">
-          <span class="status-pill">Sistema en línea</span>
-        </div>
-      </header>
-
-      <router-outlet></router-outlet>
+    <div class="ms-auto d-flex align-items-center gap-3">
+      <a class="nav-link" routerLink="/" routerLinkActive="text-primary">
+        Clientes
+      </a>
+      <a
+        class="btn btn-outline-primary"
+        routerLink="/seguimiento"
+        routerLinkActive="active"
+      >
+        Seguir reparación
+      </a>
     </div>
-  </section>
+  </nav>
+</header>
+
+<main>
+  <router-outlet />
 </main>
+
+<footer class="bg-white border-top py-4">
+  <div class="container d-flex flex-column flex-sm-row justify-content-between gap-2">
+    <span class="fw-semibold">{{ title }}</span>
+    <span class="text-secondary small">Portal de atención para clientes</span>
+  </div>
+</footer>
