@@ -1,16 +1,20 @@
+/* Suaviza las esquinas de la tarjeta que contiene el listado. */
 .card {
   border-radius: 1rem;
 }
 
+/* Ajusta el borde y el color del ícono/campo que acompaña al buscador. */
 .client-search .input-group-text {
   border-color: #dce3ec;
   color: #65758b;
 }
 
+/* Permite que el campo de búsqueda se encoja en pantallas angostas sin desbordarse. */
 .client-search .form-control {
   min-width: 0;
 }
 
+/* Da contraste y jerarquía visual a los encabezados de la tabla. */
 thead th {
   background: #f8f9fb;
   color: #65758b;
@@ -19,23 +23,42 @@ thead th {
   white-space: nowrap;
 }
 
+/* Sobrescribe los colores claros locales del encabezado y de las celdas en modo oscuro. */
+:host-context(html[data-bs-theme='dark']) .table {
+  --bs-table-bg: #1f2937;
+  --bs-table-color: #e5e7eb;
+  --bs-table-border-color: #374151;
+  --bs-table-striped-bg: #243244;
+  --bs-table-hover-bg: #273449;
+}
+
+:host-context(html[data-bs-theme='dark']) thead th {
+  background: #273449;
+  color: #d1d5db;
+}
+
+/* Mantiene un ancho mínimo para que los datos de las celdas sean legibles. */
 tbody td {
   min-width: 7rem;
 }
 
+/* Reserva más espacio para el nombre y el código del cliente. */
 tbody td:first-child {
   min-width: 9rem;
 }
 
+/* Reserva espacio para que los botones de acción no se compriman. */
 tbody td:last-child {
   min-width: 10rem;
 }
 
+/* Centra verticalmente y da espacio a los mensajes de lista vacía o sin coincidencias. */
 .empty-state {
   padding-bottom: 4rem !important;
   padding-top: 4rem !important;
 }
 
+/* Presenta el símbolo del estado vacío dentro de un círculo azul. */
 .empty-icon {
   align-items: center;
   background: #e8f1ff;

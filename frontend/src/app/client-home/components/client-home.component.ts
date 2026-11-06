@@ -8,6 +8,7 @@ import { ClientListComponent } from '../client-list/client-list.component';
 
 const ADDRESS_PREFIX = 'client-address:v1:';
 
+// La API guarda la dirección en un solo campo; este tipo representa sus partes en el frontend.
 interface ClientAddressFields {
   locality: string;
   street: string;
@@ -22,10 +23,14 @@ interface ClientAddressFields {
   styleUrl: './client-home.component.scss',
 })
 export class ClientHomeComponent implements OnInit {
+  // Servicio que centraliza las solicitudes HTTP al recurso /clients.
   private readonly clientsService = inject(ClientsService);
 
+  // Estado reactivo de la pantalla; Angular actualiza la vista cuando estos valores cambian.
   protected readonly clients = signal<Client[]>([]);
   protected readonly searchTerm = signal('');
+
+  // Filtra en memoria y exige que cada palabra buscada aparezca en algún dato del cliente.
   protected readonly filteredClients = computed(() => {
     const terms = this.normalizeSearch(this.searchTerm()).split(/\s+/).filter(Boolean);
     if (terms.length === 0) {
@@ -46,6 +51,7 @@ export class ClientHomeComponent implements OnInit {
           address.floor,
         ].join(' '),
       );
+      // Quitar separadores permite encontrar teléfonos aunque se escriban con otro formato.
       const compactSearchable = searchable.replace(/[^a-z0-9]/g, '');
 
       return terms.every((term) => {
@@ -62,6 +68,7 @@ export class ClientHomeComponent implements OnInit {
   protected readonly errorMessage = signal('');
   protected readonly successMessage = signal('');
 
+  // Formulario tipado y validado antes de enviar datos a la API.
   protected readonly clientForm: ClientFormGroup = new FormGroup({
     name: new FormControl('', {
       nonNullable: true,
@@ -93,6 +100,7 @@ export class ClientHomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // Carga el listado apenas se crea la pantalla.
     this.loadClients();
   }
 
@@ -100,6 +108,7 @@ export class ClientHomeComponent implements OnInit {
     this.loading.set(true);
     this.loadFailed.set(false);
     this.errorMessage.set('');
+    // subscribe procesa la respuesta asíncrona de HttpClient.
     this.clientsService.getAll().subscribe({
       next: (clients) => {
         this.clients.set(clients);
@@ -115,12 +124,14 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected saveClient(): void {
+    // Marca todos los campos para mostrar errores si se intenta enviar un formulario inválido.
     this.clientForm.markAllAsTouched();
     if (this.clientForm.invalid || this.saving()) {
       return;
     }
 
     const formValue = this.clientForm.getRawValue();
+    // El backend espera name, phone y address; por eso compactamos las partes de la dirección.
     const client: ClientInput = {
       name: formValue.name.trim(),
       phone: formValue.phone.trim(),
@@ -137,9 +148,11 @@ export class ClientHomeComponent implements OnInit {
     this.successMessage.set('');
 
     const request = editingId
+      // Con ID existente se actualiza; sin ID se crea un cliente nuevo.
       ? this.clientsService.update(editingId, client)
       : this.clientsService.create(client);
 
+    // Actualiza la lista local al completar la operación, sin volver a pedir todos los clientes.
     request.subscribe({
       next: (savedClient) => {
         if (editingId) {
@@ -162,6 +175,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected editClient(client: Client): void {
+    // Separa la dirección guardada y carga sus valores en el formulario.
     const address = this.parseAddress(client.address);
     this.editingId.set(client._id);
     this.clientForm.setValue({
@@ -174,6 +188,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected deleteClient(client: Client): void {
+    // Evita borrar accidentalmente y bloquea otra eliminación mientras haya una en curso.
     if (this.deletingId() || !window.confirm(`¿Eliminar al cliente ${client.name}?`)) {
       return;
     }
@@ -198,6 +213,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   protected resetForm(): void {
+    // También limpia el modo edición, para que el próximo envío cree un cliente.
     this.clientForm.reset();
     this.editingId.set(null);
   }
@@ -219,6 +235,7 @@ export class ClientHomeComponent implements OnInit {
   };
 
   private formatPhoneNumber(value: string): string {
+    // Conserva solo 10 dígitos y agrega el guion después del código de área de 4 dígitos.
     const digits = value.replace(/\D/g, '').slice(0, 10);
     if (digits.length <= 4) {
       return digits.length === 4 ? `${digits}-` : digits;
@@ -228,6 +245,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   private serializeAddress(address: ClientAddressFields): string {
+    // El prefijo identifica el formato nuevo y permite reconocerlo al volver a editar.
     return `${ADDRESS_PREFIX}${JSON.stringify(address)}`;
   }
 
@@ -255,14 +273,16 @@ export class ClientHomeComponent implements OnInit {
           };
         }
       } catch {
-        // A malformed or legacy address is kept editable as a single street value.
+        // Si el contenido guardado no es válido, se conserva como texto de dirección antiguo.
       }
     }
 
+    // Compatibilidad con clientes guardados antes de separar localidad, calle, altura y piso.
     return { locality: '', street: value, number: '', floor: '' };
   }
 
   private normalizeSearch(value: string): string {
+    // Permite buscar sin distinguir mayúsculas ni acentos (por ejemplo, "Jose" y "José").
     return value
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
@@ -271,6 +291,7 @@ export class ClientHomeComponent implements OnInit {
   }
 
   private getErrorMessage(error: HttpErrorResponse, fallback: string): string {
+    // Prioriza el mensaje de la API y da una indicación especial si no hay conexión.
     const message = error.error?.message;
     if (typeof message === 'string') {
       return message;
